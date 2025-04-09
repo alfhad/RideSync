@@ -1,5 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, IsStrongPassword, MaxLength, MinLength } from "class-validator";
-import { UserRole } from "@prisma/client"
+import { IsEmail, IsNotEmpty, IsNumberString, IsObject, IsOptional, IsString, IsStrongPassword, MaxLength, MinLength } from "class-validator";
 
 export class CreateUserDto {
 
@@ -22,10 +21,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   phone: string;
 
+  @IsObject()
   @IsOptional()
-  @IsArray()
-  @ArrayMinSize(2)
-  @ArrayMaxSize(2)
-  @IsNumber({}, { each: true })
-  currentLocation?: [number, number]; // [latitude, longitude]
+  socialLinks: object;
+
+  @IsNotEmpty()
+  currentLocation: [number, number];
 }

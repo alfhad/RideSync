@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { RideService } from './ride.service';
-import { CreateRideDto, GetRidesByUserDto, UpdateRideDto } from '../dto';
+import { CreateRideDto, FindNearbyRidesDto, GetRidesByUserDto, UpdateRideDto } from '../dto';
 import { ApiResponse } from 'src/utils';
-import { JoinRideDto } from 'src/dto/join-ride.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { UserRole } from '@prisma/client';
 
@@ -11,7 +10,7 @@ export class RideController {
   constructor(private rideService: RideService) { }
 
   @Post()
-  @Roles(UserRole.ADMIN)
+  // @Roles(UserRole.ADMIN)
   async createRide(@Body() createRideDto: CreateRideDto) {
     try {
       const ride = await this.rideService.createRide(createRideDto);
@@ -21,19 +20,19 @@ export class RideController {
     }
   }
 
-  @Post('join/:id')
-  @Roles(UserRole.USER)
-  async joinRide(@Param('id') rideId: string, @Body() joinRideDto: JoinRideDto) {
+  @Get('nearby')
+  // @Roles(UserRole.USER)
+  async findNearbyRides(@Body() findNearbyRidesDto: FindNearbyRidesDto) {
     try {
-      const ride = await this.rideService.joinRide(rideId, joinRideDto);
-      return new ApiResponse(ride);
+      const rides = await this.rideService.findNearbyRides(findNearbyRidesDto);
+      return new ApiResponse(rides);
     } catch (error) {
       throw new Error(error);
     }
   }
 
   @Get(':email')
-  @Roles(UserRole.ADMIN)
+  // @Roles(UserRole.ADMIN)
   async getRidesByUser(@Param() getRidesByUserDto: GetRidesByUserDto) {
     try {
       const rides = await this.rideService.getRidesByUser(getRidesByUserDto);
@@ -44,7 +43,7 @@ export class RideController {
   }
 
   @Get()
-  @Roles(UserRole.SUPERADMIN)
+  // @Roles(UserRole.SUPERADMIN)
   async getAllRides() {
     try {
       const rides = await this.rideService.getAllRides();
@@ -55,7 +54,7 @@ export class RideController {
   }
 
   @Put(':id')
-  @Roles(UserRole.ADMIN)
+  // @Roles(UserRole.ADMIN)
   async updateRideDetails(@Param('id') rideId: string, @Body() updateRideDto: UpdateRideDto) {
     try {
       const ride = await this.rideService.updateRideDetails(rideId, updateRideDto);
@@ -64,4 +63,5 @@ export class RideController {
       throw new Error(error);
     }
   }
+
 }

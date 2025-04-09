@@ -10,7 +10,7 @@ export class AdminRequestController {
   constructor(private adminRequestService: AdminRequestService) { }
 
   @Get()
-  @Roles(UserRole.SUPERADMIN)
+  // @Roles(UserRole.SUPERADMIN)
   async getAllAdminRequests() {
     try {
       const adminRequests = await this.adminRequestService.getAllAdminRequests();
@@ -21,7 +21,7 @@ export class AdminRequestController {
   }
 
   @Post()
-  @Roles(UserRole.USER)
+  // @Roles(UserRole.USER)
   async createAdminRequest(@Body() createAdminRequestDto: CreateAdminRequestDto) {
     try {
       const adminRequest = await this.adminRequestService.createAdminRequest(createAdminRequestDto);
@@ -32,7 +32,7 @@ export class AdminRequestController {
   }
 
   @Patch(':id')
-  @Roles(UserRole.SUPERADMIN)
+  // @Roles(UserRole.SUPERADMIN)
   async updateAdminRequest(@Param('id') requestId: string, @Body() updateAdminRequestDto: UpdateAdminRequestDto) {
     try {
       const adminRequest = await this.adminRequestService.updateAdminRequest(requestId, updateAdminRequestDto);

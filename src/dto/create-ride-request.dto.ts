@@ -1,8 +1,12 @@
 import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
-export class JoinRideDto {
+export class CreateRideRequestDto {
 
   @IsEmail()
   @IsNotEmpty()
   email: string
+
+  @IsString()
+  @IsNotEmpty()
+  rideId: string
 } 

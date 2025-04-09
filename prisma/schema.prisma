@@ -20,18 +20,14 @@ model User {
   hashedPassword  String
   phone           String
   role            UserRole @default(USER)
-  currentLocation Float[]
+  currentLocation Json // GeoJSON ( { type: "Point", coordinates: [longitude, latitude] } )
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  socialLinks     Json? // Social links of the user for example: { twitter: "https://twitter.com/username", linkedin: "https://linkedin.com/in/username" }
 
   AdminRequest AdminRequest?
   Ride         Ride[]
-}
-
-enum UserRole {
-  USER
-  ADMIN
-  SUPERADMIN
+  JoinRequests RideJoinRequest[]
 }
 
 model AdminRequest {
@@ -46,12 +42,6 @@ model AdminRequest {
   rejectionReason String?
 
   User User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-enum AdminRequestStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
 }
 
 model Ride {
@@ -69,7 +59,34 @@ model Ride {
   updatedAt     DateTime   @updatedAt
   joinedUsers   String[]   @db.ObjectId
 
-  Admin User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  Admin        User              @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  JoinRequests RideJoinRequest[]
+}
+
+model RideJoinRequest {
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  rideId    String            @db.ObjectId
+  userId    String            @db.ObjectId
+  status    JoinRequestStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  Ride Ride @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, rideId]) // Ensures a user cannot request to join the same ride multiple times
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPERADMIN
+}
+
+enum AdminRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 enum RideStatus {
@@ -77,4 +94,10 @@ enum RideStatus {
   ONGOING
   COMPLETED
   CANCELED
+}
+
+enum JoinRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { decryptPassword, generateJwt, hashPassword } from '../utils';
 import { CreateUserDto } from '../dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -18,13 +18,16 @@ export class UserService {
           email: createUserDto.email,
           hashedPassword: hashedPassword,
           phone: createUserDto.phone,
-          currentLocation: createUserDto.currentLocation
+          currentLocation: {
+            type: "Point",
+            coordinates: [createUserDto.currentLocation[0], createUserDto.currentLocation[1]] // Ensure this is [longitude, latitude]
+          }
         }
       });
 
       return createdUser;
     } catch (error) {
-      throw error;
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -46,7 +49,7 @@ export class UserService {
 
       return generateJwt({ id: user.id, email: user.email, role: user.role });
     } catch (error) {
-      throw error;
+      throw new BadRequestException(error.message);
     }
   }
 }

@@ -5,4 +5,7 @@ export * from "./update-admin-request.dto";
 export * from "./create-ride.dto";
 export * from "./get-rides-by-user.dto";
 export * from "./update-ride.dto";
-export * from "./join-ride.dto";
+export * from "./create-ride-request.dto";
+export * from "./get-ride-requests.dto";
+export * from "./update-ride-request.dto";
+export * from "./find-nearby-rides.dto";

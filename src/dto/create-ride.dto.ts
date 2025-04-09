@@ -15,7 +15,7 @@ export class CreateRideDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(10)
-  @MaxLength(100)
+  @MaxLength(150)
   description: string
 
   @IsNotEmpty()
