@@ -145,7 +145,7 @@ export class RideService {
         pipeline: [
           {
             $geoNear: {
-              near: { type: "Point", coordinates: [findNearbyRidesDto.currentLocation[0], findNearbyRidesDto.currentLocation[1]] },
+              near: { type: "Point", coordinates: findNearbyRidesDto.currentLocation },
               distanceField: "distance",
               spherical: true,
               maxDistance: findNearbyRidesDto.radius * 1000,

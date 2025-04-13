@@ -20,7 +20,7 @@ export class UserService {
           phone: createUserDto.phone,
           currentLocation: {
             type: "Point",
-            coordinates: [createUserDto.currentLocation[0], createUserDto.currentLocation[1]] // Ensure this is [longitude, latitude]
+            coordinates: createUserDto.currentLocation
           }
         }
       });

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumberString, IsObject, IsOptional, IsString, IsStrongPassword, MaxLength, MinLength } from "class-validator";
+import { ArrayMinSize, IsArray, IsEmail, IsNotEmpty, IsNumber, IsNumberString, IsObject, IsOptional, IsString, IsStrongPassword, MaxLength, MinLength } from "class-validator";
 
 export class CreateUserDto {
 
@@ -25,6 +25,9 @@ export class CreateUserDto {
   @IsOptional()
   socialLinks: object;
 
+  @IsArray()
+  @ArrayMinSize(2)
+  @IsNumber({}, { each: true })
   @IsNotEmpty()
   currentLocation: [number, number];
 }
