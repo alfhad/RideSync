@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { RideRequestService } from './ride-request.service';
 import { CreateRideRequestDto, GetRideRequestsDto, UpdateRideRequestDto } from '../dto';
 import { ApiResponse } from 'src/utils';
@@ -11,10 +11,11 @@ export class RideRequestController {
   constructor(private rideRequestService: RideRequestService) { }
 
   @Post()
-  // @Roles(UserRole.USER)
-  async createRideRequest(@Body() createRideRequestDto: CreateRideRequestDto) {
+  @Roles(UserRole.USER, UserRole.ADMIN)
+  async createRideRequest(@Req() request, @Body() createRideRequestDto: CreateRideRequestDto) {
     try {
-      const createdRideRequest = await this.rideRequestService.createRideRequest(createRideRequestDto);
+      const user = request.user;
+      const createdRideRequest = await this.rideRequestService.createRideRequest(user.id, createRideRequestDto);
       return new ApiResponse(createdRideRequest);
     } catch (error) {
       throw error;

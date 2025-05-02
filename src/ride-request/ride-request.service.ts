@@ -1,26 +1,15 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateRideRequestDto, GetRideRequestsDto } from '../dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JoinRequestStatus, RideStatus } from '@prisma/client';
+import { JoinRequestStatus } from '@prisma/client';
 
 @Injectable()
 export class RideRequestService {
 
   constructor(private prismaService: PrismaService) { }
 
-  async createRideRequest(createRideRequestDto: CreateRideRequestDto) {
+  async createRideRequest(userId: string, createRideRequestDto: CreateRideRequestDto) {
     try {
-
-      const user = await this.prismaService.user.findUnique({
-        where: {
-          email: createRideRequestDto.email
-        }
-      });
-
-      if (!user) {
-        throw new HttpException('User not found', 404);
-      }
-
       const ride = await this.prismaService.ride.findUnique({
         where: {
           id: createRideRequestDto.rideId
@@ -33,14 +22,14 @@ export class RideRequestService {
 
       const createdRideRequest = await this.prismaService.rideJoinRequest.create({
         data: {
-          userId: user.id,
+          userId: userId,
           rideId: ride.id
         }
       });
 
       return createdRideRequest;
     } catch (error) {
-      throw error;
+      throw new HttpException(error.message, 500);
     }
   }
 
@@ -54,7 +43,7 @@ export class RideRequestService {
 
       return rideRequests;
     } catch (error) {
-      throw error;
+      throw new HttpException(error.message, 500);
     }
   }
 
@@ -81,7 +70,7 @@ export class RideRequestService {
 
       return updatedRideRequest;
     } catch (error) {
-      throw error;
+      throw new HttpException(error.message, 500);
     }
   }
 
